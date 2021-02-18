@@ -9,9 +9,6 @@ Please delete options that are not relevant.
 - [ ] This change requires a documentation update
 # Testing Instructions
 Please describe the tests required to verify your changes. Provide instructions so PR Tester can check functionality. Please also list any relevant details for your tests
-# Checklist:
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] My changes generate no new warnings or errors
-- [ ] I have added test instructions that prove my fix is effective or that my feature works
+1. `git fetch --all`
+1. `git checkout branch-name`
+1. `serve`
