@@ -42,17 +42,17 @@ class Comments(ViewSet):
     
     def update(self, request, pk = None):
         # handle PUT request for comments, response: empty body with 204 status code
-        author = Commentr.objects.get(user=request.auth.user)
-        # get the comment record w/ primary key equal to pk
-        comment = Comment.objects.get (pk=pk)
-        comment.title = request.data["title"]
-        comment.comment_type_id = request.data["commentTypeId"]
-        comment.number_of_players = request.data["numberOfPlayers"]
-        comment.description = request.data["description"]
-        comment.author = author
+        # use token passed in the 'Authorization' header
+        post = Post.objects.get(pk=request.data["post_id"])
+        author = RareUser.objects.get(user = request.auth.user)
+        # create a new Python instance of the Comment class con properties de REQUEST de client 
+        comment = Comment()
+        comment.content = request.data["content"]
+        comment.created_on = request.data["created_on"]
+        comment.post_id = post.id
+        # now use the Djanog ORM to fetch the record from the database whose 'id' is what the client passed as commentTypeId
+        comment.author_id = author.id
         
-        comment_type = CommentType.objects.get(pk=request.data["commentTypeId"])
-        comment.comment_type = comment_type
         comment.save()
         # 204 status send back
         return Response({}, status=status.HTTP_204_NO_CONTENT)
