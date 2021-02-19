@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "python.linting.pylintEnabled": true,
     "sqltools.connections": [
         {
@@ -8,4 +9,7 @@
             "database": "db.sqlite3"
         }
     ]
+=======
+  "python.linting.pylintEnabled": true
+>>>>>>> main
 }
