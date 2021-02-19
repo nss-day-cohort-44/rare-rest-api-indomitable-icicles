@@ -10,5 +10,8 @@ from .posttag import PostTag
 =======
 from .category import Category
 from .posttag import PostTag
+<<<<<<< HEAD
 from .accounttype import AccountType 
 >>>>>>> origin/lr-rareuser-model
+=======
+>>>>>>> main
