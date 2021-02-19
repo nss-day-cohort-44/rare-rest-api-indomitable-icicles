@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from levelupapi.models import Post, Category, RareUser
+from rareapi.models import Post, Category, RareUser
 
 
 class Posts(ViewSet):
@@ -48,44 +48,43 @@ class Posts(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-    # def create(self, request):
-    #     """Handle POST operations
-    #     Returns:
-    #         Response -- JSON serialized game instance
-    #     """
+    def create(self, request):
+        """Handle POST operations
+        Returns:
+            Response -- JSON serialized post instance
+        """
 
-    #     # Uses the token passed in the `Authorization` header
-    #     rareuser = Rareuser.objects.get(user=request.auth.user)
+        # Uses the token passed in the `Authorization` header
+        rareuser = RareUser.objects.get(user=request.auth.user)
 
-    #     # Create a new Python instance of the Post class
-    #     # and set its properties from what was sent in the
-    #     # body of the request from the client.
-    #     post = Post()
-    #     post.title = request.data["title"]
-    #     post.publication_date = request.data["publicationDate"]
-    #     post.content = request.data["contenet"]
-    #     post.image = request.data["image"]
-    #     post.rareuser = rareuser
+        # Create a new Python instance of the Post class
+        # and set its properties from what was sent in the
+        # body of the request from the client.
+        post = Post()
+        post.title = request.data["title"]
+        post.publication_date = request.data["publicationDate"]
+        post.content = request.data["contenet"]
+        post.image = request.data["image"]
 
-    #     # Use the Django ORM to get the record from the database
-    #     # whose `id` is what the client passed as the
-    #     # `gameTypeId` in the body of the request.
-    #     category = Category.objects.get(pk=request.data["categoryId"])
-    #     post.category = category
+        # Use the Django ORM to get the record from the database
+        # whose `id` is what the client passed as the
+        # `categoryId` in the body of the request.
+        category = Category.objects.get(pk=request.data["categoryId"])
+        post.category = category
 
-    #     # Try to save the new game to the database, then
-    #     # serialize the game instance as JSON, and send the
-    #     # JSON as a response to the client request
-    #     try:
-    #         post.save()
-    #         serializer = PostSerializer(post, context={'request': request})
-    #         return Response(serializer.data)
+        # Try to save the new post to the database, then
+        # serialize the post instance as JSON, and send the
+        # JSON as a response to the client request
+        try:
+            post.save()
+            serializer = PostSerializer(post, context={'request': request})
+            return Response(serializer.data)
 
-    #     # If anything went wrong, catch the exception and
-    #     # send a response with a 400 status code to tell the
-    #     # client that something was wrong with its request data
-    #     except ValidationError as ex:
-    #         return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+        # If anything went wrong, catch the exception and
+        # send a response with a 400 status code to tell the
+        # client that something was wrong with its request data
+        except ValidationError as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostSerializer(serializers.ModelSerializer):
