@@ -1,7 +1,5 @@
 from django.db import models
 
-from .rareuser import RareUser
-
 class Comment(models.Model):
         
         post = models.ForeignKey("Post", on_delete=models.CASCADE)
