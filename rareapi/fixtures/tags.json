@@ -1,0 +1,58 @@
+[
+    {
+        "model": "rareapi.tag",
+        "pk": 1,
+        "fields": {
+            "label": "Nifty"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 2,
+        "fields": {
+            "label": "Sad"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 3,
+        "fields": {
+            "label": "Outdoors"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 4,
+        "fields": {
+            "label": "Opinion"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 5,
+        "fields": {
+            "label": "Sports"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 6,
+        "fields": {
+            "label": "Science"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 7,
+        "fields": {
+            "label": "Animals"
+        }
+    },
+    {
+        "model": "rareapi.tag",
+        "pk": 8,
+        "fields": {
+            "label": "Literature"
+        }
+    }
+]
