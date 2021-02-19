@@ -1,0 +1,37 @@
+[
+  {
+      "model": "rareapi.category",
+      "pk": 1,
+      "fields": {
+          "label": "SQL"
+      }
+  },
+  {
+      "model": "rareapi.category",
+      "pk": 2,
+      "fields": {
+          "label": "React.js"
+      }
+  },
+  {
+      "model": "rareapi.category",
+      "pk": 3,
+      "fields": {
+          "label": "Python"
+      }
+  }, 
+  {
+      "model": "rareapi.category",
+      "pk": 4,
+      "fields": {
+          "label": "HTML5"
+      }
+  },
+  {
+      "model": "rareapi.category",
+      "pk": 5,
+      "fields": {
+          "label": "CSS3"
+      }
+  }
+]
