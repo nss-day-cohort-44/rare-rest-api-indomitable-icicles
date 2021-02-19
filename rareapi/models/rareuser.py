@@ -1,10 +1,14 @@
-class RareUser():
-    def __init__(self, id, bio, profile_image_url, created_on, user_id):
-        self.id = id
-        self.bio = bio
-        self.profile_image_url = profile_image_url
-        self.created_on = created_on 
-        self.user_id  = user_id 
-        
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.fields import DateField
+from django.db.models.fields.files import ImageField
 
-        
+
+
+class RareUser(models.Model):
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.CharField(max_length=50)
+    profile_image_url = models.ImageField(upload_to='Games', height_field=None, width_field=None, max_length=None)
+    created_on = models.DateTimeField(auto_now_add=True)
+    active =  models.BooleanField(default=True)
