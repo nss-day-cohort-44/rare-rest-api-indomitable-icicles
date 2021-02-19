@@ -55,7 +55,7 @@ class Posts(ViewSet):
         """
 
         # Uses the token passed in the `Authorization` header
-        rareuser = RareUser.objects.get(user=request.auth.user)
+        rare_user = RareUser.objects.get(user=request.auth.user)
 
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
@@ -65,6 +65,7 @@ class Posts(ViewSet):
         post.publication_date = request.data["publication_date"]
         post.content = request.data["content"]
         post.image = request.data["image"]
+        post.rare_user = rare_user
 
         # Use the Django ORM to get the record from the database
         # whose `id` is what the client passed as the
