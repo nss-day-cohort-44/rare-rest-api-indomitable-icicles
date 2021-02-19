@@ -1,11 +1,12 @@
-class Post():
-    def __init__(self, id, user_id, category_id, title, publication_date, image_url, content, approved=True):
-        self.id = id
-        self.user_id = user_id
-        self.category_id = category_id
-        self.title = title
-        self.publication_date = publication_date
-        self.image_url = image_url
-        self.content = content
-        self.approved = True
-        self.category = None
+from django.db import models
+
+
+class Post(models.Model):
+    rare_user = models.ForeignKey("RareUser", on_delete=models.CASCADE)
+    category = models.ForeignKey("Category", on_delete=models.CASCADE)
+    title = models.CharField(max_length=55)
+    publication_date = models.DateField()
+    content = models.CharField(max_length=255)
+    image = models.ImageField(
+        upload_to="posts", height_field=None, width_field=None, max_length=None)
+    approved = models.BooleanField(default=True)

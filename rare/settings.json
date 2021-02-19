@@ -1,9 +1,18 @@
 {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> main
     "sqltools.connections": [
         {
             "previewLimit": 50,
             "driver": "SQLite",
+<<<<<<< HEAD
+            "name": "database",
+            "database": "${workspaceFolder:api}/db.sqlite3"
+        }
+    ]
+=======
             "name": "rare",
             "database": "db.sqlite3"
         }
@@ -11,4 +20,5 @@
 =======
   "python.linting.pylintEnabled": true
 >>>>>>> 5564a5797ad7a69b5332a9b907744e3ab1f8d2c3
+>>>>>>> main
 }
