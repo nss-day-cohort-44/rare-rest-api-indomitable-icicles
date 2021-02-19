@@ -4,3 +4,4 @@ from .tag import Tag
 from .comment import Comment
 from .category import Category
 from .posttag import PostTag
+

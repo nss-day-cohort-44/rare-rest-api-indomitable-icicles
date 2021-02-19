@@ -1,9 +1,10 @@
-class Comment():
-    def __init__(self, id, post_id, author_id, content, created_on, username):
-        self.id = id
-        self.post_id = post_id
-        self.author_id = author_id
-        self.content = content
-        self.created_on = created_on
-        self.username = username
+from django.db import models
+
+class Comment(models.Model):
+        
+        post = models.ForeignKey("Post", on_delete=models.CASCADE)
+        author = models.ForeignKey("RareUser", on_delete=models.CASCADE)
+        content = models.CharField(max_length=250)
+        created_on = models.DateTimeField(auto_now=False)
+        
         
