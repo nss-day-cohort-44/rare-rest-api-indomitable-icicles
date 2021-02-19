@@ -1,0 +1,15 @@
+[
+    {
+        "model": "rareapi.post",
+        "pk": 1,
+        "fields": {
+            "rare_user": 1,
+            "category": 1,
+            "title": "rare project",
+            "publication_date": "2021-10-04",
+            "content": "This is an amazing project",
+            "image": "project.jpg",
+            "approved": "True"
+        }
+    }
+]
