@@ -1,12 +1,12 @@
 from django.db import models
 
-from .game import Game
+from .rareuser import RareUser
 
-class Comment():
+class Comment(models.Model):
         
-        post = post
-        author_id = author_id
-        content = content
-        created_on = created_on
-        username = username
+        post = models.ForeignKey("Post", on_delete=models.CASCADE)
+        author = models.ForeignKey("RareUser", on_delete=models.CASCADE)
+        content = models.CharField(max_length=250)
+        created_on = models.DateTimeField(auto_now=False)
+        
         
