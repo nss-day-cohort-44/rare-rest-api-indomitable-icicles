@@ -1,0 +1,22 @@
+[
+    {
+        "model": "rareapi.comment",
+        "pk": 1,
+        "fields": {
+            "post_id": 1, 
+            "author_id": 1, 
+            "content": "What a great Post",
+            "created_on": "2021-02-19 09:26:03.478039"
+        }
+    },
+    {
+        "model": "rareapi.comment",
+        "pk": 2,
+        "fields": {
+            "post_id": 2, 
+            "author_id": 1, 
+            "content": "I don't like this post",
+            "created_on": "2021-02-20 09:26:03.478039"
+        }
+    }
+]
