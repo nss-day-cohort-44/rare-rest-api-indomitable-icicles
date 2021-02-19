@@ -7,5 +7,6 @@
             "name": "rare-db",
             "database": "db.sqlite3"
         }
-    ]
+    ],
+    "python.pythonPath": "/Users/admin/.local/share/virtualenvs/rare-rest-api-indomitable-icicles-kPC4QMXn/bin/python"
 }
