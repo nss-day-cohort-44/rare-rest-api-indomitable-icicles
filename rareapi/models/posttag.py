@@ -1,7 +1,5 @@
-class Post_tag():
-    def __init__(self, id, post_id, tag_id):
-        self.id = id
-        self.post_id = post_id
-        self.tag_id = tag_id
-        self.tag = None
-        
+from django.db import models
+
+class PostTag(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    tag = models.ForeignKey("Tag", on_delete=models.CASCADE)
