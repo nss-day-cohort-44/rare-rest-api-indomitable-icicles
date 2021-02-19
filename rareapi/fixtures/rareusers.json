@@ -1,0 +1,13 @@
+[
+    {
+        "model": "rareapi.gamer",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "bio": "Me",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1346038066222395392/UmF6D46B_400x400.jpg",
+            "created_on": "2021-03-16T08:16:59.844Z",
+            "active": true
+        }
+    }
+]
