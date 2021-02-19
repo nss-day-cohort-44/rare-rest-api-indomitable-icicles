@@ -14,7 +14,7 @@ class Comments(ViewSet):
         # use token passed in the 'Authorization' header
         post = Post.objects.get(pk=request.data["post_id"])
         author = RareUser.objects.get(user = request.auth.user)
-        # create a new Python instance of the Game class con properties de REQUEST de client 
+        # create a new Python instance of the Comment class con properties de REQUEST de client 
         comment = Comment()
         comment.content = request.data["content"]
         comment.created_on = request.data["created_on"]
@@ -42,16 +42,16 @@ class Comments(ViewSet):
     
     def update(self, request, pk = None):
         # handle PUT request for comments, response: empty body with 204 status code
-        author = Gamer.objects.get(user=request.auth.user)
+        author = Commentr.objects.get(user=request.auth.user)
         # get the comment record w/ primary key equal to pk
-        comment = Game.objects.get (pk=pk)
+        comment = Comment.objects.get (pk=pk)
         comment.title = request.data["title"]
         comment.comment_type_id = request.data["commentTypeId"]
         comment.number_of_players = request.data["numberOfPlayers"]
         comment.description = request.data["description"]
         comment.author = author
         
-        comment_type = GameType.objects.get(pk=request.data["commentTypeId"])
+        comment_type = CommentType.objects.get(pk=request.data["commentTypeId"])
         comment.comment_type = comment_type
         comment.save()
         # 204 status send back
@@ -60,24 +60,24 @@ class Comments(ViewSet):
     def destroy(self, request, pk=None):
         #Handle DELETE requests/ single comment, returns 200, 404, or 500 status code
         try:
-            comment = Game.objects.get(pk=pk)
+            comment = Comment.objects.get(pk=pk)
             comment.delete()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        except Game.DoesNotExist as ex:
+        except Comment.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
         # handle GET all comments, returns JSON serialized list of comments
-        comments = Game.objects.all()
+        comments = Comment.objects.all()
         # ORM command to get all comment records from db
         comment_type = self.request.query_params.get('type', None)
         # we can check to filter the comments by type in a query string ie: comments?type=1 would return all board comments
         if comment_type is not None:
             comments = comments.filter(comment_type__id=comment_type)
-        serializer = GameSerializer(
+        serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
