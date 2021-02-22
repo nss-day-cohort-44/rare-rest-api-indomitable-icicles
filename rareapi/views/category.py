@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from rareapi.models import Category
+from rareapi.models import Category, RareUser
 
 
 class Categories(ViewSet):
@@ -16,6 +16,8 @@ class Categories(ViewSet):
         # Create a new Python instance of the class
         # and set its properties from what was sent in the
         # body of the request from the client.
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
         category = Category()
         category.label = request.data["label"]
         
@@ -65,6 +67,31 @@ class Categories(ViewSet):
             categories, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def update(self, request, pk = None):
+        # handle PUT request for categorys, response: empty body with 204 status code
+        # use token passed in the 'Authorization' header
+        
+        # create a new Python instance of the Comment class con properties de REQUEST de client 
+        category = Category()
+        category.content = request.data["label"]
+        
+        
+        
+        category.save()
+        # 204 status send back
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+        #Handle DELETE requests/ single comment, returns 200, 404, or 500 status code
+        try:
+            category = Category.objects.get(pk=pk)
+            category.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Category.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 class CategorySerializer(serializers.ModelSerializer):
     """JSON serializer 
     Arguments:
@@ -72,7 +99,7 @@ class CategorySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Category
-        fields = ('label')
+        fields = ('__all__')
         depth = 1
 
 
