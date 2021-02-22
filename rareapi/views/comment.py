@@ -73,16 +73,16 @@ class Comments(ViewSet):
         # handle GET all comments, returns JSON serialized list of comments
         comments = Comment.objects.all()
         # ORM command to get all comment records from db
-        comment_type = self.request.query_params.get('type', None)
-        # we can check to filter the comments by type in a query string ie: comments?type=1 would return all board comments
-        if comment_type is not None:
-            comments = comments.filter(comment_type__id=comment_type)
+        comment_post = self.request.query_params.get('post', None)
+        # we can check to filter the comments by post in a query string ie: comments?post=1 would return all board comments
+        if comment_post is not None:
+            comments = comments.filter(comment_post__id=comment_post)
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
 
-# JSON serializer for comments, argument: serializer type
+# JSON serializer for comments, argument: serializer postId
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
