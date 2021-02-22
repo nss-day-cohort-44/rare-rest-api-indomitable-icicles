@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rareapi.models import Post, Category, RareUser
+from rareapi.models import Post, Category, RareUser, rareuser
 
 
 class Posts(ViewSet):
@@ -17,7 +17,11 @@ class Posts(ViewSet):
         """
         # Get all post records from the database
         posts = Post.objects.all()
+        user_id = self.request.query_params.get('user_id', None)
 
+        if user_id is not None:
+            posts = posts.filter(rare_user=user_id)
+        
         # Support filtering posts by categories
         #    http://localhost:8000posts?category=1
         #
@@ -112,6 +116,6 @@ class PostSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Post
-        fields = ('category', 'title', 'publication_date',
-                  'content', 'image')
+        fields = ('title', 'publication_date',
+                  'content', 'image','category')
         depth = 1
