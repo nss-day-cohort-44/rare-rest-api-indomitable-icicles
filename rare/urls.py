@@ -20,6 +20,7 @@ from rareapi.views import register_user, login_user
 from rareapi.views import Comments
 
 router = routers.DefaultRouter(trailing_slash=False)
+
 router.register(r'comments', Comments, 'comment')
 
 
