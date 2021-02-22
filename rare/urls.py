@@ -1,5 +1,4 @@
 """rare URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
@@ -19,6 +18,7 @@ from django.urls import path
 from rareapi.views import register_user, login_user
 from rareapi.views import Comments
 from rareapi.views import Posts
+from rareapi.views import Categories
 from rareapi.views import Tags
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -27,6 +27,7 @@ router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r'comments', Comments, 'comment')
 router.register(r'posts', Posts, 'post')
+router.register(r'categories', Categories, 'category')
 router.register(r'tags', Tags, 'tag')
 
 urlpatterns = [
