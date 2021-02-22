@@ -46,7 +46,7 @@ class Comments(ViewSet):
         post = Post.objects.get(pk=request.data["post_id"])
         author = RareUser.objects.get(user = request.auth.user)
         # create a new Python instance of the Comment class con properties de REQUEST de client 
-        comment = Comment()
+        comment = Comment.objects.get(pk=pk)
         comment.content = request.data["content"]
         comment.created_on = request.data["created_on"]
         comment.post_id = post.id
