@@ -1,10 +1,11 @@
 """View module for handling requsts about tags"""
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from rareapi.models import Tag, Post, PostTag
+from rareapi.models import Tag
 
 class Tags(ViewSet):
     """Rare Tags"""
@@ -29,9 +30,11 @@ class Tags(ViewSet):
             tag.save()
             serializer = TagSerializer(tag, context={'request': request})
             return Response(serializer.data)
-    
+        except ValidationError as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self, request, pk=None):
-        """Handle PUT requests for a game
+        """Handle PUT requests for a tag
 
         Returns:
             Response: Empty body with a 204 status code
@@ -41,6 +44,7 @@ class Tags(ViewSet):
         #Get the tag record from the database whose primary key is 'pk'
         tag = Tag.objects.get(pk=pk)
         tag.label = request.data["label"]
+        tag.save()
 
         #204 status code means everything worked but the
         #server isn't sending back any data in the response
@@ -59,6 +63,7 @@ class Tags(ViewSet):
             # The `2` at the end of the route becomes `pk`
             tag = Tag.objects.get(pk=pk)
             serializer = TagSerializer(tag, context={'request': request})
+            return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
@@ -75,74 +80,26 @@ class Tags(ViewSet):
         serializer = TagSerializer(
             tags, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single Tag
 
-    # @action(methods=['post', 'delete'], detail=True)
-    # def addTag(self, request, pk=None):
-    #     """Managing adding a tag to a post"""
+        Returns:
+            Response: 200, 404, or 500 status code
+        """
+        try:
+            tag = Tag.objects.get(pk=pk)
+            tag.delete()
 
-    #     #A user wants to put a tag on a post
-    #     if request.method == "POST":
-    #         tag = Tag.objects.get(pk=pk)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-    #         # Find the post by looking for the pk on the Post
-    #         post = Post.objects.get(pk=pk)
+        except Tag.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-    #         try:
-    #             #Determine if the tag is already on the post
-    #             tagged = PostTag.objects.get(
-    #                 tag=tag, post=post)
-    #             return Response(
-    #                 {'message': 'Tag is already on this post.'},
-    #                 status=status.HTTP_422_UNPROCESSABLE_ENTITY
-    #             )
-    #         except PostTag.DoesNotExist:
-    #             #The post doesn't have this tag on it
-    #             tagged = PostTag()
-    #             tagged.tag = tag
-    #             tagged.post = post
-    #             tagged.save()
-
-    #             return Response({}, status=status.HTTP_201_CREATED)
-
-    #     # User wants to remove a tag from a post
-    #     elif request.method == "DELETE":
-    #         #Handle the case if the client
-    #         #specifies a tag or post that doesn't exist
-    #         try:
-    #             tag = Tag.objects.get(pk=pk)
-    #         except Tag.DoesNotExist:
-    #             return Response(
-    #                 {'message': 'Tag does not exist.'},
-    #                 status=status.HTTP_400_BAD_REQUEST
-    #             )
-    #         try:
-    #             post = Post.objects.get(pk=pk)
-    #         except Tag.DoesNotExist:
-    #             return Response(
-    #                 {'message': 'Post does not exist.'},
-    #                 status=status.HTTP_400_BAD_REQUEST
-    #             )
-            
-    #         try:
-    #             #Try to delete the tag
-    #             tagged = PostTag.objects.get(
-    #                 tag = tag, post=post)
-    #             tagged.delete()
-    #             return Response(None, status=status.HTTP_204_NO_CONTENT)
-
-    #         except PostTag.DoesNotExist:
-    #             return Response(
-    #                 {'message': 'This tag is not currently on this post.'},
-    #                 status=status.HTTP_404_NOT_FOUND
-    #             )
-
-    #     # If the client performs a request with a method of
-    #     # anything other than POST or DELETE, tell client that
-    #     # the method is not supported
-    #     return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        
 class TagSerializer(serializers.ModelSerializer):
     """JSON serializer for tags
 
@@ -150,4 +107,4 @@ class TagSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = ('id', 'label', 'tagged')
+        fields = ('id', 'label')
