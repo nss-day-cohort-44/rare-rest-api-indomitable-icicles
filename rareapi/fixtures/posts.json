@@ -11,5 +11,18 @@
             "image": "project.jpg",
             "approved": "True"
         }
+    },
+    {
+        "model": "rareapi.post",
+        "pk": 2,
+        "fields": {
+            "rare_user": 1,
+            "category": 1,
+            "title": "rare project 2",
+            "publication_date": "2021-11-12",
+            "content": "This is so hard",
+            "image": "project.jpg",
+            "approved": "True"
+        }
     }
 ]
