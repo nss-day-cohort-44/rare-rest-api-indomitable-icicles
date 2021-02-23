@@ -79,7 +79,7 @@ class Posts(ViewSet):
         # Use the Django ORM to get the record from the database
         # whose `id` is what the client passed as the
         # `categoryId` in the body of the request.
-        category = Category.objects.get(pk=request.data["categoryId"])
+        category = Category.objects.get(pk=request.data["category_id"])
         post.category = category
 
         # Try to save the new post to the database, then
@@ -130,7 +130,7 @@ class Posts(ViewSet):
         post.image = request.data["image"]
         post.rare_user = rare_user
 
-        category = Category.objects.get(pk=request.data["categoryId"])
+        category = Category.objects.get(pk=request.data["category_id"])
         post.category = category
         post.save()
 
