@@ -114,15 +114,16 @@ class Posts(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        """Handle PUT requests for a game
+        """Handle PUT requests for a post
         Returns:
             Response -- Empty body with 204 status code
         """
-        post = Post.objects.get(user=request.auth.user)
+        rare_user = RareUser.objects.get(user=request.auth.user)
 
         # Do mostly the same thing as POST, but instead of
-        # creating a new instance of Game, get the game record
+        # creating a new instance of Post, get the post record
         # from the database whose primary key is `pk`
+        post = Post.objects.get(pk=pk)
         post.title = request.data["title"]
         post.publication_date = request.data["publication_date"]
         post.content = request.data["content"]
