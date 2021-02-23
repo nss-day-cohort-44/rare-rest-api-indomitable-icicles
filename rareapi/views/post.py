@@ -17,11 +17,15 @@ class Posts(ViewSet):
         """
         # Get all post records from the database
         posts = Post.objects.all()
-        user_id = self.request.query_params.get('user_id', None)
 
-        if user_id is not None:
-            posts = posts.filter(rare_user=user_id)
+        sort_parameter = self.request.query_params.get('sortby', None)
 
+        if sort_parameter is not None and sort_parameter == 'user':
+            current_rare_user = RareUser.objects.get(user=request.auth.user)
+            user_posts = Post.objects.filter(rare_user=current_rare_user)
+            serializer = PostSerializer(
+                user_posts, many=True, context={'request': request})
+            return Response(serializer.data)
         # Support filtering posts by categories
         #    http://localhost:8000posts?category=1
         #
@@ -30,9 +34,10 @@ class Posts(ViewSet):
         if category is not None:
             posts = posts.filter(category__id=category)
 
-        serializer = PostSerializer(
-            posts, many=True, context={'request': request})
-        return Response(serializer.data)
+        else:
+            serializer = PostSerializer(
+                posts, many=True, context={'request': request})
+            return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single game
