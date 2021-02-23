@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "rare_user": 1,
-            "category": 2,
+            "category": 1,
             "title": "rare project",
             "publication_date": "2021-10-04",
             "content": "This is an amazing project",
@@ -17,7 +17,7 @@
         "pk": 2,
         "fields": {
             "rare_user": 1,
-            "category": 2,
+            "category": 1,
             "title": "rare project 2",
             "publication_date": "2021-11-12",
             "content": "This is so hard",

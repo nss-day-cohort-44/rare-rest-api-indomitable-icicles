@@ -1,5 +1,4 @@
 """View module for handling requests about games"""
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.http import HttpResponseServerError
@@ -17,9 +16,10 @@ class Categories(ViewSet):
         # Create a new Python instance of the class
         # and set its properties from what was sent in the
         # body of the request from the client.
-        
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
         category = Category()
-        category.label = request.data['label']
+        category.label = request.data["label"]
         
 
         # Try to save the new cat to the database, then
@@ -67,10 +67,16 @@ class Categories(ViewSet):
             categories, many=True, context={'request': request})
         return Response(serializer.data)
 
-    def update(self, request, pk=None):
-       
-        category = Category.objects.get(pk=pk)
-        category.label = request.data['label']
+    def update(self, request, pk = None):
+        # handle PUT request for categorys, response: empty body with 204 status code
+        # use token passed in the 'Authorization' header
+        
+        # create a new Python instance of the Comment class con properties de REQUEST de client 
+        category = Category()
+        category.content = request.data["label"]
+        
+        
+        
         category.save()
         # 204 status send back
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -93,7 +99,7 @@ class CategorySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Category
-        fields = ('id', 'label')
+        fields = ('__all__')
         depth = 1
 
 
