@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rareapi.models import Post, Category, RareUser, rareuser, PostTag
+from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag
 
 
 class Posts(ViewSet):
@@ -36,9 +36,15 @@ class Posts(ViewSet):
             posts = posts.filter(category__id=category)
 
         else:
+            for post in posts: 
+
+                posttags = PostTag.objects.filter(post=post)
+                post.posttags = posttags 
+        
             serializer = PostSerializer(
                 posts, many=True, context={'request': request})
             return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single game
@@ -114,14 +120,21 @@ class Posts(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class PostTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostTag
+        fields = ('tag',)
+        depth = 1
 
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
     Arguments:
         serializer type
     """
+    posttags = PostTagSerializer(many=True)
     class Meta:
         model = Post
         fields = ('title', 'publication_date',
-                  'content', 'image','category', 'tagged')
+                  'content', 'image','category', 'posttags')
         depth = 1
+

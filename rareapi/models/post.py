@@ -12,9 +12,9 @@ class Post(models.Model):
     approved = models.BooleanField(default=True)
     
     @property
-    def tagged(self):
-        return self.__tagged
+    def posttags(self):
+        return self.__posttags
 
-    @tagged.setter
-    def tagged(self, value):
-        self.__tagged = value
+    @posttags.setter
+    def posttags(self, value):
+        self.__posttags = value
