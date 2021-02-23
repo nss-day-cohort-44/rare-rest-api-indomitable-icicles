@@ -118,15 +118,14 @@ class Posts(ViewSet):
         # Do mostly the same thing as POST, but instead of
         # creating a new instance of Game, get the game record
         # from the database whose primary key is `pk`
-        game = Game.objects.get(pk=pk)
-        game.title = request.data["title"]
-        game.maker = request.data["maker"]
-        game.number_of_players = request.data["numberOfPlayers"]
-        game.skill_level = request.data["skillLevel"]
-        game.gamer = gamer
+        post.title = request.data["title"]
+        post.publication_date = request.data["publication_date"]
+        post.content = request.data["content"]
+        post.image = request.data["image"]
+        post.rare_user = rare_user
 
-        gametype = GameType.objects.get(pk=request.data["gameTypeId"])
-        game.gametype = gametype
+        category = Category.objects.get(pk=request.data["categoryId"])
+        post.category = category
         post.save()
 
         # 204 status code means everything worked but the
