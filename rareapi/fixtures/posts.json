@@ -16,7 +16,7 @@
         "model": "rareapi.post",
         "pk": 2,
         "fields": {
-            "rare_user": 1,
+            "rare_user": 2,
             "category": 1,
             "title": "rare project 2",
             "publication_date": "2021-11-12",
