@@ -24,7 +24,6 @@ from rareapi.views import Tags
 router = routers.DefaultRouter(trailing_slash=False)
 
 
-
 router.register(r'comments', Comments, 'comment')
 router.register(r'posts', Posts, 'post')
 router.register(r'categories', Categories, 'category')
