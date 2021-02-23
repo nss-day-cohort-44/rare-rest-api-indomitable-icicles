@@ -10,3 +10,11 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to="posts", height_field=None, width_field=None, max_length=None)
     approved = models.BooleanField(default=True)
+    
+    @property
+    def tagged(self):
+        return self.__tagged
+
+    @tagged.setter
+    def tagged(self, value):
+        self.__tagged = value
