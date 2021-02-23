@@ -24,6 +24,11 @@ class Posts(ViewSet):
         if sort_parameter is not None and sort_parameter == 'user':
             current_rare_user = RareUser.objects.get(user=request.auth.user)
             user_posts = Post.objects.filter(rare_user=current_rare_user)
+
+            for post in user_posts: 
+                posttags = PostTag.objects.filter(post=post)
+                post.posttags = posttags
+
             serializer = PostSerializer(
                 user_posts, many=True, context={'request': request})
             return Response(serializer.data)
