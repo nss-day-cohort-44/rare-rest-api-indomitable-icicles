@@ -17,13 +17,12 @@ class Posts(ViewSet):
         """
         # Get all post records from the database
         posts = Post.objects.all()
-        
+
         sort_parameter = self.request.query_params.get('sortby', None)
-        
-        
+
         if sort_parameter is not None and sort_parameter == 'user':
             current_rare_user = RareUser.objects.get(user=request.auth.user)
-            user_posts = Post.objects.filter(rare_user=current_rare_user) 
+            user_posts = Post.objects.filter(rare_user=current_rare_user)
             serializer = PostSerializer(
                 user_posts, many=True, context={'request': request})
             return Response(serializer.data)
@@ -86,7 +85,7 @@ class Posts(ViewSet):
         # Use the Django ORM to get the record from the database
         # whose `id` is what the client passed as the
         # `categoryId` in the body of the request.
-        category = Category.objects.get(pk=request.data["categoryId"])
+        category = Category.objects.get(pk=request.data["category_id"])
         post.category = category
 
         # Try to save the new post to the database, then
@@ -120,12 +119,38 @@ class Posts(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+    def update(self, request, pk=None):
+        """Handle PUT requests for a post
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
+        # Do mostly the same thing as POST, but instead of
+        # creating a new instance of Post, get the post record
+        # from the database whose primary key is `pk`
+        post = Post.objects.get(pk=pk)
+        post.title = request.data["title"]
+        post.publication_date = request.data["publication_date"]
+        post.content = request.data["content"]
+        post.image = request.data["image"]
+        post.rare_user = rare_user
+
+        category = Category.objects.get(pk=request.data["category_id"])
+        post.category = category
+        post.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTag
         fields = ('tag',)
         depth = 1
-
+        
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
     Arguments:
