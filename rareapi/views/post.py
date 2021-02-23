@@ -21,7 +21,7 @@ class Posts(ViewSet):
 
         if user_id is not None:
             posts = posts.filter(rare_user=user_id)
-        
+
         # Support filtering posts by categories
         #    http://localhost:8000posts?category=1
         #
@@ -108,6 +108,31 @@ class Posts(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def update(self, request, pk=None):
+        """Handle PUT requests for a game
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        post = Post.objects.get(user=request.auth.user)
+
+        # Do mostly the same thing as POST, but instead of
+        # creating a new instance of Game, get the game record
+        # from the database whose primary key is `pk`
+        game = Game.objects.get(pk=pk)
+        game.title = request.data["title"]
+        game.maker = request.data["maker"]
+        game.number_of_players = request.data["numberOfPlayers"]
+        game.skill_level = request.data["skillLevel"]
+        game.gamer = gamer
+
+        gametype = GameType.objects.get(pk=request.data["gameTypeId"])
+        game.gametype = gametype
+        post.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
@@ -117,5 +142,5 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('title', 'publication_date',
-                  'content', 'image','category')
+                  'content', 'image', 'category')
         depth = 1
