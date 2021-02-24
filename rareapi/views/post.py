@@ -5,8 +5,12 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
+<<<<<<< HEAD
 from django.contrib.auth.models import User
 from rareapi.models import Post, Category, RareUser, rareuser
+=======
+from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag
+>>>>>>> main
 
 
 class Posts(ViewSet):
@@ -24,6 +28,11 @@ class Posts(ViewSet):
         if sort_parameter is not None and sort_parameter == 'user':
             current_rare_user = RareUser.objects.get(user=request.auth.user)
             user_posts = Post.objects.filter(rare_user=current_rare_user)
+
+            for post in user_posts: 
+                posttags = PostTag.objects.filter(post=post)
+                post.posttags = posttags
+
             serializer = PostSerializer(
                 user_posts, many=True, context={'request': request})
             return Response(serializer.data)
@@ -36,9 +45,15 @@ class Posts(ViewSet):
             posts = posts.filter(category__id=category)
 
         else:
+            for post in posts: 
+
+                posttags = PostTag.objects.filter(post=post)
+                post.posttags = posttags 
+        
             serializer = PostSerializer(
                 posts, many=True, context={'request': request})
             return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single game
@@ -53,6 +68,8 @@ class Posts(ViewSet):
             #
             # The `2` at the end of the route becomes `pk`
             post = Post.objects.get(pk=pk)
+            posttags = PostTag.objects.filter(post=post)
+            post.posttags = posttags
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
@@ -114,6 +131,7 @@ class Posts(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
     def update(self, request, pk=None):
         """Handle PUT requests for a post
         Returns:
@@ -165,3 +183,4 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'publication_date',
                   'content', 'image', 'category', 'rare_user')
         depth = 1
+

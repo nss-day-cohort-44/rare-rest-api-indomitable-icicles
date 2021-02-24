@@ -10,3 +10,11 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to="posts", height_field=None, width_field=None, max_length=None)
     approved = models.BooleanField(default=True)
+    
+    @property
+    def posttags(self):
+        return self.__posttags
+
+    @posttags.setter
+    def posttags(self, value):
+        self.__posttags = value
