@@ -5,7 +5,7 @@ class Post(models.Model):
     rare_user = models.ForeignKey("RareUser", on_delete=models.CASCADE, related_name="posts")
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
     title = models.CharField(max_length=55)
-    publication_date = models.DateField()
+    publication_date = models.DateField(auto_now=True)
     content = models.CharField(max_length=255)
     image = models.ImageField(
         upload_to="posts", height_field=None, width_field=None, max_length=None)
