@@ -20,7 +20,6 @@ class Comments(ViewSet):
         # create a new Python instance of the Comment class con properties de REQUEST de client 
         comment = Comment()
         comment.content = request.data["content"]
-        # comment.created_on = models.DateTimeField(auto_now_add=True)
         comment.post_id = post.id
         # now use the Djanog ORM to fetch the record from the database whose 'id' is what the client passed as commentTypeId
         comment.author_id = author.id
@@ -76,7 +75,7 @@ class Comments(ViewSet):
         # handle GET all comments, returns JSON serialized list of comments
         comments = Comment.objects.all()
         # ORM command to get all comment records from db
-        post_id = self.request.query_params.get('post', None)
+        post_id = self.request.query_params.get('post_id', None)
         # we can check to filter the comments by post in a query string ie: comments?post=1 would return all board comments
         if post_id is not None:
             comments = comments.filter(post__id=post_id)
