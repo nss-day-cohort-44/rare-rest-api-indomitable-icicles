@@ -4,13 +4,12 @@ from django.http import HttpResponseServerError
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import serializers
-<<<<<<< HEAD
+from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag, tag
 from django.contrib.auth.models import User
-from rareapi.models import Post, Category, RareUser, rareuser
-=======
-from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag
->>>>>>> main
+
+
 
 
 class Posts(ViewSet):
@@ -157,8 +156,61 @@ class Posts(ViewSet):
         # server is not sending back any data in the response
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-class PostUserSerializer(serializers.ModelSerializer):
+    @action(methods=['post', 'delete'], detail=True)
+    def changetag(self, request, pk=None):
+        if request.method == "POST":
+            post = Post.objects.get(pk=pk)
 
+            try: 
+                tagger = PostTag.objects.get(
+                    tag=tag, post=post)
+                return Response(
+                    {'message': 'Post already features this tag.'},
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                )
+            except PostTag.DoesNotExist:
+                tagger = PostTag()
+                tagger.post = post
+                tagger.tag = tag
+                tagger.save()
+
+                return Response({}, status=status.HTTP_201_CREATED)
+
+        elif request.method == "DELETE":
+            try:
+                post = Post.objects.get(pk=pk)
+            except Post.DoesNotExist:
+                return Response(
+                   {'message': 'This does not exist.'},
+                    status=status.HTTP_400_BAD_REQUEST 
+                )
+
+            try:
+                # Try to delete the signup
+                tagger = PostTag.objects.get(
+                    post=post, tag=tag)
+                tagger.delete()
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+            except PostTag.DoesNotExist:
+                return Response(
+                    {'message': 'Not currently a tag on this post.'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+        # If the client performs a request with a method of
+        # anything other than POST or DELETE, tell client that
+        # the method is not supported
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class PostTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostTag
+        fields = ['tag',] 
+        depth = 1
+
+
+class PostUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
@@ -177,10 +229,11 @@ class PostSerializer(serializers.ModelSerializer):
         serializer type
     """
     rare_user = PostRareUserSerializer(many=False)
+    posttags = PostTagSerializer(many=True)
 
     class Meta:
         model = Post
         fields = ('id', 'title', 'publication_date',
-                  'content', 'image', 'category', 'rare_user')
+                  'content', 'image', 'category', 'posttags', 'rare_user')
         depth = 1
 
