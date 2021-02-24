@@ -5,7 +5,12 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
+<<<<<<< HEAD
+from django.contrib.auth.models import User
+from rareapi.models import Post, Category, RareUser, rareuser
+=======
 from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag
+>>>>>>> main
 
 
 class Posts(ViewSet):
@@ -152,21 +157,30 @@ class Posts(ViewSet):
         # server is not sending back any data in the response
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-class PostTagSerializer(serializers.ModelSerializer):
+class PostUserSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = PostTag
-        fields = ('tag',)
-        depth = 1
-        
+        model = User
+        fields = ['first_name', 'last_name']
+
+class PostRareUserSerializer(serializers.ModelSerializer):
+    user = PostUserSerializer(many=False)
+
+    class Meta:
+        model =RareUser
+        fields = ['user']
+
+
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
     Arguments:
         serializer type
     """
-    posttags = PostTagSerializer(many=True)
+    rare_user = PostRareUserSerializer(many=False)
+
     class Meta:
         model = Post
-        fields = ('title', 'publication_date',
-                  'content', 'image','category', 'posttags')
+        fields = ('id', 'title', 'publication_date',
+                  'content', 'image', 'category', 'rare_user')
         depth = 1
 
