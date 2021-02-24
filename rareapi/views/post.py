@@ -7,6 +7,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import serializers
 from rareapi.models import Post, Category, RareUser, rareuser, PostTag, Tag, tag
+from django.contrib.auth.models import User
+
+
 
 
 class Posts(ViewSet):
@@ -203,18 +206,34 @@ class Posts(ViewSet):
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTag
-        fields = ('tag',)
+        fields = ['tag',] 
         depth = 1
-        
+
+
+class PostUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+class PostRareUserSerializer(serializers.ModelSerializer):
+    user = PostUserSerializer(many=False)
+
+    class Meta:
+        model =RareUser
+        fields = ['user']
+
+
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
     Arguments:
         serializer type
     """
+    rare_user = PostRareUserSerializer(many=False)
     posttags = PostTagSerializer(many=True)
+
     class Meta:
         model = Post
-        fields = ('title', 'publication_date',
-                  'content', 'image','category', 'posttags')
+        fields = ('id', 'title', 'publication_date',
+                  'content', 'image', 'category', 'posttags', 'rare_user')
         depth = 1
 
