@@ -92,6 +92,7 @@ class Posts(ViewSet):
         post.content = request.data["content"]
         post.image = request.data["image"]
         post.rare_user = rare_user
+        post.posttags = []
 
         # Use the Django ORM to get the record from the database
         # whose `id` is what the client passed as the
@@ -206,7 +207,7 @@ class Posts(ViewSet):
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTag
-        fields = ['tag',] 
+        fields = ['tag'] 
         depth = 1
 
 
