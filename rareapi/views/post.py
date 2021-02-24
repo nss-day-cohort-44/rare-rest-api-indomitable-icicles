@@ -206,7 +206,7 @@ class Posts(ViewSet):
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTag
-        fields = ['tag'] 
+        fields = ['tag', ] 
         depth = 1
 
 
