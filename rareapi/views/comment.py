@@ -1,5 +1,6 @@
 # view model for handling GAME requests
 from django.core.exceptions import ValidationError
+from django.db import models
 from rest_framework import status
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
@@ -7,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Comment, Post, RareUser
+
+
 
 class Comments(ViewSet):
         # handle POST operations, returns JSON serialized GAME INSTANCE
@@ -17,7 +20,7 @@ class Comments(ViewSet):
         # create a new Python instance of the Comment class con properties de REQUEST de client 
         comment = Comment()
         comment.content = request.data["content"]
-        comment.created_on = request.data["created_on"]
+        # comment.created_on = models.DateTimeField(auto_now_add=True)
         comment.post_id = post.id
         # now use the Djanog ORM to fetch the record from the database whose 'id' is what the client passed as commentTypeId
         comment.author_id = author.id
