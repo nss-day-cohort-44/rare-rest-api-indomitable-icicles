@@ -1,6 +1,5 @@
 # view model for handling GAME requests
 from django.core.exceptions import ValidationError
-from django.db import models
 from rest_framework import status
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
@@ -8,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Comment, Post, RareUser
+from django.contrib.auth.models import User
 
 
 
@@ -83,10 +83,29 @@ class Comments(ViewSet):
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
+# JSON serializer to get user first name for the comment card
+class CommentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+        depth = 1
+
+# Now we have ANOTHER serializer to get from USER table toe RAREUSER table which is actually adjacent to 
+# our COMMENTS table
+class CommentRareUserSerializer(serializers.ModelSerializer):
+
+    user = CommentUserSerializer(many=False)
+
+    class Meta:
+        model =RareUser
+        fields = ['user']
 
 # JSON serializer for comments, argument: serializer postId
 class CommentSerializer(serializers.ModelSerializer):
+    
+    author = CommentRareUserSerializer(many=False)
+
     class Meta:
         model = Comment
-        fields = ('id','post_id', 'author_id', 'content','created_on')
+        fields = ('id','post_id', 'author', 'content', 'created_on')
         depth = 1
