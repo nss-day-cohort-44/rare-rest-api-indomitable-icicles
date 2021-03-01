@@ -36,7 +36,7 @@ class Posts(ViewSet):
                 user_posts, many=True, context={'request': request})
             return Response(serializer.data)
         # Support filtering posts by categories
-        #    http://localhost:8000posts?category=1
+        #    http://localhost:8000posts?category=1  
         #
         # That URL will retrieve all categories
         category = self.request.query_params.get('label', None)
@@ -161,7 +161,7 @@ class Posts(ViewSet):
     def changetag(self, request, pk=None):
         if request.method == "POST":
             post = Post.objects.get(pk=pk)
-
+            tag = Tag.objects.get(id=request.data["tag_id"])
             try: 
                 tagger = PostTag.objects.get(
                     tag=tag, post=post)
@@ -180,18 +180,18 @@ class Posts(ViewSet):
         elif request.method == "DELETE":
             try:
                 post = Post.objects.get(pk=pk)
+                tag_id = request.data["tag_id"]
+                tag = Tag.objects.get(pk=tag_id)
+                relationship = PostTag.objects.get(post=post, tag=tag)
+                relationship.delete()
+
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
             except Post.DoesNotExist:
                 return Response(
                    {'message': 'This does not exist.'},
                     status=status.HTTP_400_BAD_REQUEST 
                 )
-
-            try:
-                # Try to delete the signup
-                tagger = PostTag.objects.get(
-                    post=post, tag=tag)
-                tagger.delete()
-                return Response(None, status=status.HTTP_204_NO_CONTENT)
 
             except PostTag.DoesNotExist:
                 return Response(
@@ -203,6 +203,8 @@ class Posts(ViewSet):
         # anything other than POST or DELETE, tell client that
         # the method is not supported
         return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
